@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+          <li><a href="#">Dashboard</a></li
+          <li><a href="#">Users</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">Orders</a></li>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </div>
+      <!-- Main Content -->
+      <div class="main-content">
+        <h1>Welcome to the Admin Dashboard</h1>
+        <p>Here you can manage all aspects of your website or application.</p>
+      </div>
+    </div>
+  </body>
+</html>
+<style>
+    body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .wrapper {
+    display: flex;
+    width: 100%;
+  }
+  
+  .sidebar {
+    background-color: #333;
+    color: #fff;
+    width: 200px;
+    height: 100vh;
+    padding: 20px;
+  }
+  
+  .sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  .main-content {
+    padding: 20px;
+    width: calc(100% - 200px);
+  }
+  
+  .main-content h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .main-content p {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  
+</style>
