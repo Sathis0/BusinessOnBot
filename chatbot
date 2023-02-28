@@ -1,0 +1,18 @@
+const { Botkit } = require('botkit');
+const redisStorage = require('botbuilder-redis-storage');
+
+const math = require('mathjs');
+const controller = new Botkit({
+  debug: false,
+});
+
+controller.hears('.*', 'message', async (bot, message) => {
+  try {
+    const result = math.evaluate(message.text);
+    bot.reply(message, `${message.text} = ${result}`);
+  } catch (error) {
+    bot.reply(message, 'Sorry, I could not understand your math problem.');
+  }
+});
+
+controller.spawn({});
