@@ -1,0 +1,69 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+app.use(bodyParser.json());
+
+// Set up database connection
+mongoose.connect('mongodb://localhost/myapp', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('Database connected');
+});
+
+// Define user schema and model
+const userSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  isAdmin: Boolean
+});
+const User = mongoose.model('User', userSchema);
+
+// Authentication route
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (!user) {
+    return res.status(400).send({ message: 'Invalid username or password' });
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(400).send({ message: 'Invalid username or password' });
+  }
+  const token = jwt.sign({ sub: user._id }, 'secret');
+  res.send({ token });
+});
+
+// Authorization middleware
+function authorize(req, res, next) {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).send({ message: 'Unauthorized' });
+  }
+  jwt.verify(token, 'secret', async (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    const user = await User.findById(decoded.sub);
+    if (!user || !user.isAdmin) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    req.user = user;
+    next();
+  });
+}
+
+// Admin route (requires authentication and authorization)
+app.get('/api/admin', authorize, (req, res) => {
+  res.send({ message: `Welcome, ${req.user.username}!` });
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
